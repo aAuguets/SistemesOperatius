@@ -1,0 +1,107 @@
+#!/bin/sh
+chmod a+x ja
+
+if [ $1 = "-n" ]; then
+    if [ -d $HOME/.ja ];then #-d comprueba si existe y es un directotio
+	zenity --question --text="Vols esborrar les dades antigues?" 
+	if [ $? = 0 ];then
+	    rm  -r $HOME/.ja
+	    mkdir $HOME/.ja
+	    echo "Base de dades creada."
+	else
+	   echo "Es mantenen les dades anteriors."
+	fi
+    else 
+	mkdir $HOME/.ja
+	echo "Base de dades creada"
+    fi
+
+#el '>' crea un fichero en el directorio que te encuentres
+elif [ $1 = "-a" ]; then
+    if  [ -f $HOME/.ja/$2 ];then
+	echo "El projecte ja esta creat "
+    else
+	>$HOME/.ja/$2
+	echo "Projecte creat." 
+    fi
+elif [ $1 = "-r" ];then
+    if  [ -f $HOME/.ja/$2 ];then
+	rm $HOME/.ja/$2
+	echo "El projecte s'ha suprimit"
+    else
+	echo "El projecte no existeix"
+    fi
+        
+elif [ $1 = "-b" ];then
+    temp=$(tail -1 $HOME/.ja/$2 | cut -d" " -f1)
+    if [ $temp ]; then
+	if [ $temp = "B" ]; then
+	    echo "Ja s'esta treballant al projecte."
+	else
+	    echo "B $(date +"%s")" >> $HOME/.ja/$2
+	    echo "Projecte iniciat."
+	fi
+    else
+	echo "B $(date +"%s")" >> $HOME/.ja/$2
+	echo "Projecte iniciat."
+    fi
+    
+
+elif [ $1 = "-e" ];then
+    temp=$(tail -1 $HOME/.ja/$2 | cut -d" " -f1)
+    if [ $temp ]; then
+	if [ $temp = "E" ]; then
+	    echo "El projecte ja esta finalitzat."
+	else
+	    echo "E $(date +"%s")" >> $HOME/.ja/$2
+	    echo "Projecte finalitzat."
+	fi
+    fi
+    
+
+#"echo -e"  interpreta los caracteres esperciales como '\n' , '\t' 
+elif [ $1 = "-h" ]; then
+    echo  -e "\nLa comanda per executar es ./ja y les opcion seguents: "
+    echo  -e "\t-n -> crea una nova base de dades."
+    echo  -e "\t-a <prjid> -> Afegeix una nou projecte a la base de dades."
+    echo  -e "\t-r <pjird> -> Esborra tot rastre del projecte de la base de dades"
+   echo  -e "\t-b <pjird> -> Apunta a la base de dades l'hora en la que comencem a treballa."
+   echo  -e "\t-e <pjird> -> Apunta a la base de dades l'hora en la que acabem de treballar."
+   echo  -e "\t<pjird> -> Consulta l'informacio del projecte: hores treballades i sessions\n."
+   
+elif [ $1 ]; then
+    if [ -r $HOME/.ja/$1 ]; then
+	Total=0
+	TempsSesio=0
+	Sesions=0
+	
+	while read -r line
+	do
+	    Estat=$(echo $line | cut -d" " -f1)
+	    Temps=$(echo $line | cut -d" " -f2)
+	    if [ $Estat ];then
+		if [ $Estat = "B" ]; then
+		    TempsB=$Temps
+		elif [ $Estat = "E" ];then
+		    TempsE=$Temps
+		    TempsSesio=$(($TempsE - TempsB))
+		    Total=$(($Total + TempsSesio))
+		    Sesions=$(($Sesions + 1))
+		    
+		fi	
+	    fi
+	done < $HOME/.ja/$1
+	Hores=$(($Total / 3600))
+	Minuts=$(($Total / 60))
+	Segons=$(($Total % 60))
+	
+	echo "Temps treballat: $Hores h: $Minuts m: $Segons s"
+	echo "Sesions treballades : $Sesions"
+	
+    fi
+    
+else
+    echo "Error. Comanda invalida, introdueix ./ja -h "
+	   
+fi
+

@@ -1,0 +1,30 @@
+#!/bin/sh
+chmod a+x zenity
+
+
+
+DADA=$(zenity --forms --title="Exercici 2.1" --text="Consulta" \
+	      --add-entry="Nom del fitxer: " \
+	      --add-entry="Paraula: ")
+FILE=$(echo $DADA | cut -f 1 -d"|")
+WORD=$(echo $DADA | cut -f 2 -d"|")
+
+DIR=$(locate $FILE)
+var="false"
+
+TROBAT=$(grep $WORD $DIR)
+
+for item in $TROBAT
+do
+    if [ $item = $WORD ]; then
+	echo $item
+	var="true"
+    fi
+done
+
+if [ $var = "true" ]; then
+    echo True
+else
+    echo False
+fi
+

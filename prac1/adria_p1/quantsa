@@ -1,0 +1,4 @@
+#!/bin/sh 
+chmod 700 quantsa
+
+ls $1 | grep a | wc -l | sort -r

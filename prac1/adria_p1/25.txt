@@ -1,0 +1,5 @@
+sq:
+
+aquesta ordre permet comprimir els fitxers. Per comprimir es canvien els prefixos comuns i s'usa un per poder codificar-lo.
+
+la podriem usar per comprimir arxius a l'hora d'enviar-los. 

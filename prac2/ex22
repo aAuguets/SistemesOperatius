@@ -1,0 +1,15 @@
+#!/bin/sh
+chmod a+x ex22
+
+
+DIR=$(zenity --file-selection --directory --title="Choose directory")
+JPEG=$(ls $DIR | find *.jpeg | cut -d "." -f1)
+
+for img in $JPEG
+do
+
+    convert $img.jpeg -resize 150x200 $img-br.jpeg
+done
+
+
+

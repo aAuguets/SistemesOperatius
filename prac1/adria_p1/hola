@@ -1,0 +1,5 @@
+#!/bin/sh 
+chmodu 700 hola
+msg1="Hola"
+msg2="$msg1 nois!!"
+echo $msg2

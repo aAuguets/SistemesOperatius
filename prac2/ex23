@@ -1,0 +1,20 @@
+#!/bin/sh
+chmod a+x ex23
+
+
+DIR=$(zenity --file-selection --directory --title="Choose directory")
+
+FILE=$(ls $DIR | find -name *.py | sort -d)
+for class in $FILE
+do
+    awk '/^class/ {gsub("class ",""); gsub(/\o.*/,""); print $0,FILENAME}' $class
+done
+
+
+
+
+
+
+
+
+#awk '/^class/ {gsub("class ",""); gsub(/\(.*/,"");print $0,FILENAME}' $class

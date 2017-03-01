@@ -1,0 +1,24 @@
+#esto es un comentario
+#set term png
+#set output 'grafica.png'
+#set xrange [-1:4]
+#set yrange [0:30]
+#set grid
+#set title "VOTACIONES"
+#set xlabel "Candidatos"
+#set ylabel "votos"
+#set style data histogram
+#set style histogram cluster gap 1.5
+#set style fill solid border
+#set boxwidth 1.5 
+#plot 'votos.dat'  using 2:xticlabels(1) lc rgb 'yellow' title 'votos' \
+	"" format using 2:lc rgb 'red'
+	
+#replot
+set grid
+set xlabel "Agrupacions"
+set ylabel "Vots(?)"
+set style data histogram
+set style fill solid border
+set boxwidth 2
+plot 'votos.dat'  using 2:xticlabels(1) title 'VOTS' lc rgb 'green'
